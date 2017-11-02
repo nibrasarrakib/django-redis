@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>django with redis</title>
+  {% load static %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="{% static 'd3client/css/style.css' %}" />
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="{% static 'd3client/js/chart.js' %}"></script>
+  <script src="{% static 'd3client/js/jquery.form.min.js' %}"></script>
+</head>
+
+<body>
+  <div class="top-nav navbar-fixed-top">
+    <div class="brand">
+      <div class="menu-icon">
+        <a id="menu-toggle" href="#">
+          <span class="glyphicon glyphicon-list"></span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+      <ul class="sidebar-nav">
+        <!-- <li class="sidebar-brand">
+          <a href="#">
+                        Data Visualization
+                    </a>
+        </li> -->
+        <li>
+          <a href="/d3client">Home</a>
+        </li>
+        <li>
+          <a href="show">Charts</a>
+        </li>
+      </ul>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+      <div class="container-fluid">
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+</body>
+
+<script type="text/javascript">
+  $(function() {
+    $("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+  });
+</script>
+
+</html>

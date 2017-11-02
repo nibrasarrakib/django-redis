@@ -56,16 +56,14 @@ var CHART = {
   lineChart: function(svg, data) {
     var self = this;
     var data = self.formatData(data);
-    console.log(data)
     var parseTime = d3.timeParse("%d-%b-%y");
 
-    $.each(data, function(i,v){
+    $.each(data, function(i, v) {
       v.date = parseTime(v[0]);
-      v.close = v[1];
+      v.close = +v[1];
     });
-    console.log(data);
     var margin = {
-        top: 20,
+        top: 0,
         right: 20,
         bottom: 30,
         left: 50
@@ -87,37 +85,35 @@ var CHART = {
         return x(d.date);
       })
       .y(function(d) {
-        // console.log('y',d);
-        return y(d.close);
+        return y(+d.close);
       });
-
     // append the svg obgect to the body of the page
     // appends a 'group' element to 'svg'
     // moves the 'group' element to the top left margin
-    var svg = d3.select("body").append("svg")
+    var svg = d3.select("#line-chart-svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
-    data.forEach(function(d) {
-      d.date = parseTime(d.date);
-      d.close = +d.close;
-    });
-
     // Scale the range of the data
     x.domain(d3.extent(data, function(d) {
       return d.date;
     }));
     y.domain([0, d3.max(data, function(d) {
-      return d.close;
+      return +d.close;
     })]);
     // Add the valueline path.
     // console.log(data);
     svg.append("path")
       .data([data])
       .attr("class", "line")
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 1.5)
       .attr("d", valueline);
 
     // Add the X Axis

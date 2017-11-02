@@ -1,66 +1,50 @@
-<!DOCTYPE html>
-<html>
+{% extends 'd3client/layout/base.html' %}
+{% block content %}
+<style>
+  .c-red {
+    color: red !important;
+    font-weight: bold !important;
+  }
+</style>
 
-<head>
-  <meta charset="utf-8">
-  <title>List from redis</title>
-  {% load static %}
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-  <script src="{% static 'd3client/js/chart.js' %}"></script>
-  <script src="{% static 'd3client/js/jquery.form.min.js' %}"></script>
-  <style>
-    .c-red{
-      color:red;
-      font-weight: bold;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Select key:</label>
-          <div class="input-group">
-            <select class="form-control" id="key-list">
-              </select>
-            <span class="input-group-btn">
-              <button class="btn btn-default c-red" type="submit">X!</button>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <svg id="line-chart-svg" width="960" height="500"></svg>
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label>Select key:</label>
+      <div class="input-group">
+        <select class="form-control" id="key-list">
+          </select>
+        <span class="input-group-btn">
+          <button class="btn btn-default c-red" type="submit">X!</button>
+        </span>
       </div>
     </div>
   </div>
-  <script type="text/javascript">
-    $(function() {
-      REQUEST.getKeys('all').done(function(d) {
-        var opt = CREATEELEMENT.populateSelect(JSON.parse(d));
-        $('#key-list').append(opt);
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <svg id="line-chart-svg"></svg>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    REQUEST.getKeys('all').done(function(d) {
+      var opt = CREATEELEMENT.populateSelect(JSON.parse(d));
+      $('#key-list').append(opt);
+    }).fail(function(d) {
+      alert(d);
+    });
+
+    $('#key-list').change(function() {
+      var k = $('#key-list option:selected').text();
+      REQUEST.getKeys(k).done(function(d) {
+        CHART.lineChart('line-chart-svg', d);
       }).fail(function(d) {
         alert(d);
       });
+    });
 
-      $('#key-list').change(function(){
-        var k = $('#key-list option:selected').text();
-        REQUEST.getKeys(k).done(function(d){
-          CHART.lineChart('line-chart-svg', d);
-        }).fail(function(d){
-          alert(d);
-        });
-      });
-
-    })
-  </script>
-</body>
-
-</html>
+  })
+</script>
+{% endblock %}
